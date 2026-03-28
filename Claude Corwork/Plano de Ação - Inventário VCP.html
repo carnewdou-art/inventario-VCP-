@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Plano de Ação – Inventário VCP 27/03/2026</title>
+<style>
+:root {
+  --bg: #f4f6f8;
+  --card: #ffffff;
+  --border: #e0e4e8;
+  --text: #1a2332;
+  --muted: #5a6a7e;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); }
+
+/* HEADER */
+.page-header {
+  background: linear-gradient(135deg, #0d2137 0%, #1a3a5c 100%);
+  color: white; padding: 32px 40px; display: flex; align-items: center; gap: 20px;
+}
+.header-icon { font-size: 48px; }
+.header-title h1 { font-size: 26px; font-weight: 700; }
+.header-title p { font-size: 13px; opacity: 0.75; margin-top: 4px; }
+.header-badges { margin-left: auto; display: flex; gap: 12px; flex-wrap: wrap; }
+.badge {
+  background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 20px; padding: 6px 14px; font-size: 12px; font-weight: 600;
+}
+
+/* NAV */
+.nav { background: #1a3a5c; display: flex; gap: 0; border-bottom: 2px solid #0d2137; }
+.nav-btn {
+  background: none; border: none; color: rgba(255,255,255,0.65);
+  padding: 12px 22px; font-size: 13px; cursor: pointer; border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+}
+.nav-btn:hover, .nav-btn.active {
+  color: white; border-bottom-color: #64b5f6; background: rgba(255,255,255,0.07);
+}
+
+/* CONTAINER */
+.container { max-width: 1400px; margin: 0 auto; padding: 28px 24px; }
+.section { display: none; }
+.section.active { display: block; }
+
+/* PLAN CARDS */
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px; }
+.plan-card { background: var(--card); border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.plan-header { padding: 20px 24px; color: white; }
+.plan-header h2 { font-size: 16px; font-weight: 700; margin-bottom: 14px; }
+.plan-stats { display: flex; gap: 20px; }
+.stat { display: flex; flex-direction: column; align-items: center; }
+.stat-n { font-size: 24px; font-weight: 800; line-height: 1; }
+.stat-l { font-size: 11px; opacity: 0.75; margin-top: 3px; }
+.plan-body { padding: 18px 20px; }
+
+.progress-wrap {
+  height: 10px; background: #e8ecf0; border-radius: 5px; overflow: hidden;
+  position: relative; margin-bottom: 14px;
+}
+.progress-bar { height: 100%; border-radius: 5px; transition: width 0.6s; }
+.progress-label { font-size: 11px; color: var(--muted); display: block; margin-top: 5px; margin-bottom: 14px; }
+
+.section-title { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin: 14px 0 8px; }
+.err-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.err-label { font-size: 12px; width: 190px; flex-shrink: 0; color: #2d3748; }
+.err-bar-wrap { flex: 1; height: 8px; background: #eef0f3; border-radius: 4px; overflow: hidden; }
+.err-bar { height: 100%; border-radius: 4px; min-width: 3px; }
+.err-count { font-size: 12px; font-weight: 700; width: 36px; text-align: right; }
+
+.pend-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.pill { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 12px; }
+.pill-a { background: #fff3e0; color: #e65100; }
+.pill-b { background: #e3f2fd; color: #1565c0; }
+.pill-c { background: #f3e5f5; color: #6a1b9a; }
+.no-erros { font-size: 13px; color: #43a047; font-weight: 600; }
+
+/* SUMMARY TABLE */
+.summary-table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.07); margin-bottom: 28px; }
+.summary-table th { background: #1a3a5c; color: white; padding: 12px 16px; font-size: 12px; text-align: left; }
+.summary-table td { padding: 11px 16px; border-bottom: 1px solid var(--border); font-size: 13px; }
+.summary-table tr:last-child td { border-bottom: none; }
+.summary-table tr:hover td { background: #f8f9fb; }
+.td-ok { color: #2e7d32; font-weight: 700; }
+.td-div { color: #c62828; font-weight: 700; }
+.td-pend { color: #e65100; font-weight: 700; }
+
+/* ACTION CARDS */
+.action-card {
+  background: var(--card); border-radius: 10px; padding: 22px 24px;
+  margin-bottom: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+.action-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 16px; }
+.action-icon { font-size: 32px; }
+.action-header h3 { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+.action-count { font-size: 11px; font-weight: 700; color: white; padding: 3px 10px; border-radius: 10px; }
+.action-steps { padding-left: 20px; }
+.action-steps li { font-size: 14px; line-height: 1.6; margin-bottom: 8px; color: #2d3748; }
+.action-steps li:last-child { margin-bottom: 0; }
+
+/* ITEMS TABLE */
+.table-wrap { overflow-x: auto; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+.items-table { width: 100%; border-collapse: collapse; background: var(--card); font-size: 13px; }
+.items-table th {
+  background: #1a3a5c; color: white; padding: 10px 12px; font-size: 11px;
+  text-align: left; white-space: nowrap; position: sticky; top: 0; z-index: 10;
+}
+.items-table td { padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.items-table tr:hover td { background: #f5f7fa; }
+.td-pos { font-family: monospace; font-size: 12px; color: var(--muted); white-space: nowrap; }
+.td-sku { font-family: monospace; font-size: 12px; font-weight: 700; color: #1565c0; }
+.td-desc { max-width: 280px; color: #2d3748; }
+.td-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.td-obs { max-width: 320px; color: #374151; font-style: italic; font-size: 12px; }
+.div-pos { color: #2e7d32; font-weight: 700; }
+.div-neg { color: #c62828; font-weight: 700; }
+
+/* FILTER BAR */
+.filter-bar { display: flex; gap: 10px; margin-bottom: 18px; align-items: center; flex-wrap: wrap; }
+.filter-input {
+  padding: 8px 14px; border: 1px solid var(--border); border-radius: 6px;
+  font-size: 13px; flex: 1; min-width: 200px; outline: none;
+}
+.filter-input:focus { border-color: #1565c0; box-shadow: 0 0 0 2px rgba(21,101,192,0.15); }
+.filter-label { font-size: 13px; color: var(--muted); white-space: nowrap; }
+.result-count { font-size: 12px; color: var(--muted); white-space: nowrap; }
+
+/* PRINT */
+@media print {
+  .nav { display: none; }
+  .section { display: block !important; }
+  .page-break { page-break-before: always; }
+}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="header-icon">📋</div>
+  <div class="header-title">
+    <h1>Plano de Ação — Inventário VCP</h1>
+    <p>Análise de Erros e Divergências · Gerado em 27/03/2026 · Inventário 202603000048</p>
+  </div>
+  <div class="header-badges">
+    <span class="badge">🔴 3405 Divergentes</span>
+    <span class="badge">⏳ 1830 Pendentes</span>
+    <span class="badge">✅ 4302 Sem Divergência</span>
+    <span class="badge">📦 9666 Total</span>
+  </div>
+</div>
+
+<nav class="nav">
+  <button class="nav-btn active" onclick="showSection('resumo')">📊 Resumo por Plano</button>
+  <button class="nav-btn" onclick="showSection('acoes')">🎯 Como Agir por Tipo de Erro</button>
+  <button class="nav-btn" onclick="showSection('itens')">📝 Itens com Ação Definida (64)</button>
+</nav>
+
+<!-- ═══ SECTION: RESUMO ═══ -->
+<div class="section active" id="sec-resumo">
+  <div class="container">
+    <table class="summary-table">
+      <thead>
+        <tr>
+          <th>Plano</th>
+          <th>Total Linhas</th>
+          <th>Finalizado OK</th>
+          <th>Com Divergência</th>
+          <th>Pendente</th>
+          <th>Em Contagem</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Climatizado</strong></td>
+          <td>7800</td>
+          <td class="td-ok">3535</td>
+          <td class="td-div">2785</td>
+          <td class="td-pend">1418</td>
+          <td>62</td>
+        </tr>
+        <tr>
+          <td><strong>Clim. RUA7/Nív7</strong></td>
+          <td>13</td>
+          <td class="td-ok">0</td>
+          <td class="td-div">1</td>
+          <td class="td-pend">12</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td><strong>Odonto</strong></td>
+          <td>1406</td>
+          <td class="td-ok">461</td>
+          <td class="td-div">516</td>
+          <td class="td-pend">393</td>
+          <td>36</td>
+        </tr>
+        <tr>
+          <td><strong>Armazém 72</strong></td>
+          <td>444</td>
+          <td class="td-ok">306</td>
+          <td class="td-div">103</td>
+          <td class="td-pend">7</td>
+          <td>28</td>
+        </tr>
+        <tr style="background:#f0f4f8;font-weight:700">
+          <td>TOTAL GERAL</td>
+          <td>9666</td>
+          <td class="td-ok">4302</td>
+          <td class="td-div">3405</td>
+          <td class="td-pend">1830</td>
+          <td>126</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="cards-grid">
+      
+    <div class="plan-card">
+      <div class="plan-header" style="background:#1565c0">
+        <h2>Climatizado</h2>
+        <div class="plan-stats">
+          <div class="stat"><span class="stat-n">7800</span><span class="stat-l">Total</span></div>
+          <div class="stat"><span class="stat-n" style="color:#a5d6a7">3535</span><span class="stat-l">OK</span></div>
+          <div class="stat"><span class="stat-n" style="color:#ffcc80">2785</span><span class="stat-l">Divergentes</span></div>
+          <div class="stat"><span class="stat-n" style="color:#ef9a9a">1418</span><span class="stat-l">Pendentes</span></div>
+        </div>
+      </div>
+      <div class="plan-body">
+        <div class="progress-wrap">
+          <div class="progress-bar" style="width:45.3%;background:#43a047"></div>
+          <span class="progress-label">45.3% finalizado sem divergência</span>
+        </div>
+        <div class='section-title'>📋 Erros por tipo</div>
+        <div class="err-row">
+          <span class="err-label">📊 Quantidade divergente</span>
+          <div class="err-bar-wrap">
+            <div class="err-bar" style="width:41.2%;background:#e65100"></div>
+          </div>
+          <span class="err-count">1147</span>
+        </div>
+        <div class="err-row">
+          <span class="err-label">🔄 Produto divergente</span>
+          <div class="err-bar-wrap">
+            <div class="err-bar" style="width:28.7%;background:#c62828"></div>
+          </div>
+          <span class="err-count">799</span>
+        </div>
+        <div class="err-row">
+          <span class="err-label">📦 Posição Vazia</span>
+          <div class="err-bar-wrap">
+            <div class="err-bar" style="width:25.6%;background:#4527a0"></div>
+          </div>
+          <span class="err-count">712</span>
+        </div>
+        <div class="err-row">
+          <span class="err-label">⚠️ Posição Vazia + Qtd</span>
+          <div class="err-bar-wrap">
+            <div class="err-bar" style="width:2.7%;background:#6a1b9a"></div>
+          </div>
+          <span class="err-count">74</span>
+        </div>
+        <div class="err-row">
+          <span class="err-label">🏷️ Lote divergente</span>
+          <div class="err-bar-wrap">
+            <div class="err-bar" style="width:1.9%;background:#00695c"></div>
+          </div>
+          <span class="err-count">53</span>
+        </div>
+        <div class='section-title'>⏳ Posições pendentes</div><div class='pend-pills'><span class="pill pill-a">Contagem A: 262 posições</span><span class="pill pill-b">Contagem B: 621 posições</span><span class="pill pill-c">Contagem C: 530 posições</span></div>
+      </div>
+    </div>
+    <div class="plan-card">
+      <div class="plan-header" style="background:#0277bd">
+        <h2>Clim. RUA7/Nív7</h2>
+        <div class="plan-stats">
+          <div class="stat"><span class="stat-n">13</span><span class="stat-l">Total</span></div>
+          <div class="stat"><span class="stat-n" style="color:#a5d6a7">0</span><span class="stat-l">OK</span></div>
+          <div class="stat"><span class="stat-n" style="color:#ffcc80">1</span><span class="stat-l">Divergentes</span></div>
+          <div class="stat"><span class="stat-n" style="color:#ef9a9a">12</span><span class="stat-l">Pendentes</span></div>
+        </div>
+      </div>
+      <div class="plan-body">
+        <div class="progress-wrap">
+          <div class="progress-bar" style="width:0.0%;background:#43a047"></div>
+          <span class="progress-label">0.0% finalizado sem divergência</span>
+        </div>
+        <div class='section-title'>📋 Erros por tipo</div>
+        <div class="err-row">
+          <span class="err-label">🔄 Produto divergente</span>
+          <div class="err-bar-wrap">
+            <div class="err-bar" style="width:100.0%;background:#c62828"></div>
+          </div>
+          <span class="err-count">1</span>
+        </div>
+        <div class='section-title'>⏳ Posições pendentes</div><div class='pend-pills'><span class="pill pill-a">Contagem A: 11 posições</span><span class="pill pill-b">Contagem B: 1 posições</span></div>
+      </div>
+    </div>
+    <div class="plan-card">
+      <div class="plan-header" style="background:#6a1b9a">
+        <h2>Odonto</h2>
+        <div class="plan-stats">
+          <div class="stat"><span class="stat-n">1406</span><span class="stat-l">Total</span></div>
+          <div class="stat"><span class="stat-n" style="color:#a5d6a7">461</span><span class="stat-l">OK</span></div>
+          <div class="stat"><span class="stat-n" style="color:#ffcc80">516</span><span class="stat-l">Divergentes</span></div>
+          <div class="stat"><span class="stat-n" style="color:#ef9a9a">393</span><span class="stat-l">Pendentes</span></div>
+        </div>
+      </div>
+      <div class="plan-body">
+        <div class="progress-wrap">
+          <div class="progress-bar" style="width:32.8%;background:#43a047"></div>
+          <span class="progress-label">32.8% finalizado sem divergência</span>
+        </div>
+        <div class='section-title'>📋 Erros por tipo</div>
+        <div class="err-row">
+          <span class="err-label">📊 Quantidade divergente</span>
+          <div class="err-bar-wrap">
+            <div class="err-bar" style="width:37.8%;background:#e65100"></div>
+          </div>
+          <span class="err-count">195</span>
+        </div>
+        <div class="err-row">
+          <span class="err-label">🔄 Produto divergente</span>
+          <div class="err-bar-wrap">
+            <div class="err-bar" style="width:32.0%;background:#c62828"></div>
+          </div>
+          <span class="err-count">165</span>
+        </div>
+        <div class="err-row">
+          <span class="err-label">📦 Posição Vazia</span>
+          <div class="err-bar-wrap">
+            <div class="err-bar" style="width:25.6%;background:#4527a0"></div>
+          </div>
+          <span class="err-count">132</span>
+        </div>
+        <div class="err-row">
+          <span class="err-label">⚠️ Posição Vazia + Qtd</span>
+          <div class="err-bar-wrap">
+            <div class="err-bar" style="width:3.1%;background:#6a1b9a"></div>
+          </div>
+          <span class="err-count">16</span>
+        </div>
+        <div class="err-row">
+          <span class="err-label">🏷️ Lote divergente</span>
+          <div class="err-bar-wrap">
+            <div class="err-bar" style="width:1.6%;background:#00695c"></div>
+          </div>
+          <span class="err-count">8</span>
+        </div>
+        <div class='section-title'>⏳ Posições pendentes</div><div class='pend-pills'><span class="pill pill-a">Contagem A: 210 posições</span><span class="pill pill-b">Contagem B: 9 posições</span><span class="pill pill-c">Contagem C: 174 posições</span></div>
+      </div>
+    </div>
+    <div class="plan-card">
+      <div class="plan-header" style="background:#2e7d32">
+        <h2>Armazém 72</h2>
+        <div class="plan-stats">
+          <div class="stat"><span class="stat-n">444</span><span class="stat-l">Total</span></div>
+          <div class="stat"><span class="stat-n" style="color:#a5d6a7">306</span><span class="stat-l">OK</span></div>
+          <div class="stat"><span class="stat-n" style="color:#ffcc80">103</span><span class="stat-l">Divergentes</span></div>
+          <div class="stat"><span class="stat-n" style="color:#ef9a9a">7</span><span class="stat-l">Pendentes</span></div>
+        </div>
+      </div>
+      <div class="plan-body">
+        <div class="progress-wrap">
+          <div class="progress-bar" style="width:68.9%;background:#43a047"></div>
+          <span class="progress-label">68.9% finalizado sem divergência</span>
+        </div>
+        <div class='section-title'>📋 Erros por tipo</div>
+        <div class="err-row">
+          <span class="err-label">🏷️ Lote divergente</span>
+          <div class="err-bar-wrap">
+            <div class="err-bar" style="width:97.1%;background:#00695c"></div>
+          </div>
+          <span class="err-count">100</span>
+        </div>
+        <div class="err-row">
+          <span class="err-label">📦 Posição Vazia</span>
+          <div class="err-bar-wrap">
+            <div class="err-bar" style="width:1.9%;background:#4527a0"></div>
+          </div>
+          <span class="err-count">2</span>
+        </div>
+        <div class="err-row">
+          <span class="err-label">🔄 Produto divergente</span>
+          <div class="err-bar-wrap">
+            <div class="err-bar" style="width:1.0%;background:#c62828"></div>
+          </div>
+          <span class="err-count">1</span>
+        </div>
+        <div class='section-title'>⏳ Posições pendentes</div><div class='pend-pills'><span class="pill pill-a">Contagem A: 3 posições</span><span class="pill pill-b">Contagem B: 1 posições</span><span class="pill pill-c">Contagem C: 2 posições</span></div>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SECTION: AÇÕES ═══ -->
+<div class="section" id="sec-acoes">
+  <div class="container">
+    <p style="color:var(--muted);font-size:14px;margin-bottom:24px;">
+      Para cada tipo de divergência encontrada, siga as orientações abaixo. Consulte sempre o supervisor antes de finalizar um ajuste de inventário.
+    </p>
+    
+    <div class="action-card" id="ac-Quantidade-divergente">
+      <div class="action-header" style="border-left:5px solid #e65100">
+        <span class="action-icon">📊</span>
+        <div>
+          <h3>Quantidade divergente</h3>
+          <span class="action-count" style="background:#e65100">1342 ocorrências</span>
+        </div>
+      </div>
+      <ol class="action-steps"><li>Verificar se houve movimentação de estoque durante a contagem (entradas/saídas não capturadas).</li><li>Analisar o histórico de movimentações do SKU na data da contagem.</li><li>Reabrir a contagem e recontar o produto com a quantidade correta conforme saldo sistêmico.</li><li>Se a divergência for recorrente, verificar configuração de UM (unidade de medida) e fator de conversão.</li><li>Documentar a justificativa antes de ajustar o inventário.</li></ol>
+    </div>
+    <div class="action-card" id="ac-Produto-divergente">
+      <div class="action-header" style="border-left:5px solid #c62828">
+        <span class="action-icon">🔄</span>
+        <div>
+          <h3>Produto divergente</h3>
+          <span class="action-count" style="background:#c62828">966 ocorrências</span>
+        </div>
+      </div>
+      <ol class="action-steps"><li>Verificar se o produto físico na posição corresponde ao SKU registrado no sistema.</li><li>Checar se houve inversão de código: produto contado com SKU errado (verificar descrição e código de barras).</li><li>Reabrir a contagem na posição correta e inserir o produto com o SKU correto.</li><li>Se o produto físico não pertence à posição, mover para a posição correta no sistema.</li><li>Confirmar com o supervisor antes de ajustar o inventário.</li></ol>
+    </div>
+    <div class="action-card" id="ac-Posição-Vazia">
+      <div class="action-header" style="border-left:5px solid #4527a0">
+        <span class="action-icon">📦</span>
+        <div>
+          <h3>Posição Vazia</h3>
+          <span class="action-count" style="background:#4527a0">846 ocorrências</span>
+        </div>
+      </div>
+      <ol class="action-steps"><li>Ir até a posição física para confirmar se está realmente vazia.</li><li>Se vazia: verificar se o produto foi movimentado para outra posição — rastrear no sistema.</li><li>Se vazia com saldo no sistema: verificar se houve saída não registrada ou erro de entrada.</li><li>Reabrir a contagem com quantidade 0 (zero) se confirmada vazia.</li><li>Registrar observação explicando a causa (ex.: produto transferido, lote esgotado, erro de recebimento).</li></ol>
+    </div>
+    <div class="action-card" id="ac-Lote-divergente">
+      <div class="action-header" style="border-left:5px solid #00695c">
+        <span class="action-icon">🏷️</span>
+        <div>
+          <h3>Lote divergente</h3>
+          <span class="action-count" style="background:#00695c">161 ocorrências</span>
+        </div>
+      </div>
+      <ol class="action-steps"><li>Verificar o lote físico real na posição (etiqueta do produto ou embalagem).</li><li>Confirmar se é erro de digitação: maiúsculas/minúsculas, caracteres especiais (barras, hífens).</li><li>Reabrir a contagem e inserir o lote com a grafia correta conforme produto físico.</li><li>Se o lote correto pertence a outro SKU, verificar se houve inversão de produto também.</li><li>Atenção: lotes com &quot;/&quot; precisam ser digitados com o caractere especial correto.</li></ol>
+    </div>
+    <div class="action-card" id="ac-Posição-Vazia-+-Qtd">
+      <div class="action-header" style="border-left:5px solid #6a1b9a">
+        <span class="action-icon">⚠️</span>
+        <div>
+          <h3>Posição Vazia + Qtd</h3>
+          <span class="action-count" style="background:#6a1b9a">90 ocorrências</span>
+        </div>
+      </div>
+      <ol class="action-steps"><li>Situação combinada: posição sem produto registrado e quantidade divergente.</li><li>Verificar fisicamente a posição — se há produto ou está vazia.</li><li>Checar se produto foi recebido durante o período de inventário e não foi capturado.</li><li>Reabrir a contagem com os dados corretos: SKU, lote e quantidade reais.</li><li>Priorizar resolução pois impacta tanto o SKU quanto o saldo sistêmico.</li></ol>
+    </div>
+    <div class="action-card" style="border-left:5px solid #37474f;padding-left:24px">
+      <div class="action-header" style="border-left:none;padding-left:0">
+        <span class="action-icon">⏳</span>
+        <div>
+          <h3>Posições Pendentes (A / B / C)</h3>
+          <span class="action-count" style="background:#37474f">1830 posições</span>
+        </div>
+      </div>
+      <ol class="action-steps">
+        <li>Verificar no sistema quais posições ainda estão com status PENDENTE (sem contagem registrada).</li>
+        <li>Priorizar as posições pendentes na Contagem A, pois bloqueiam o avanço para B e C.</li>
+        <li>Verificar se o operador responsável pela posição ainda está no local ou precisar de substituição.</li>
+        <li>Para posições sem produto físico, registrar contagem 0 (zero) e documentar observação.</li>
+        <li>Contagens B e C pendentes devem ser concluídas mesmo que a posição já tenha saldo zerado.</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SECTION: ITENS ═══ -->
+<div class="section" id="sec-itens">
+  <div class="container">
+    <div class="filter-bar">
+      <span class="filter-label">🔍 Filtrar:</span>
+      <input class="filter-input" id="filter-input" type="text" placeholder="SKU, descrição, posição, lote ou observação..." oninput="filterTable()">
+      <span class="result-count" id="result-count">64 itens</span>
+    </div>
+    <div class="table-wrap">
+      <table class="items-table" id="items-table">
+        <thead>
+          <tr>
+            <th>Posição</th>
+            <th>SKU</th>
+            <th>Descrição</th>
+            <th>Lote</th>
+            <th>Qt. Inv.</th>
+            <th>Qt. Est.</th>
+            <th>Diverg.</th>
+            <th>Ação Sugerida</th>
+          </tr>
+        </thead>
+        <tbody id="items-tbody">
+          
+    <tr>
+      <td class="td-pos">71.01.001.001.04</td>
+      <td class="td-sku">108449</td>
+      <td class="td-desc">SJ - FIASP PENFILL - INSULINA FIASP</td>
+      <td>RR72LV4</td>
+      <td class="td-num">1235</td>
+      <td class="td-num">1290</td>
+      <td class="td-num div-neg">-55</td>
+      <td class="td-obs">Reabrir contagem e contar com 1235</td>
+    </tr>
+    <tr>
+      <td class="td-pos">71.01.001.002.01</td>
+      <td class="td-sku">34401</td>
+      <td class="td-desc">SJ - INSULINA ASPART NOVORAPID REFIL COM 3 ML</td>
+      <td>RR72CH0</td>
+      <td class="td-num">3880</td>
+      <td class="td-num">4163</td>
+      <td class="td-num div-neg">-283</td>
+      <td class="td-obs">Reabrir contagem com 4120</td>
+    </tr>
+    <tr>
+      <td class="td-pos">71.01.001.002.02</td>
+      <td class="td-sku">33999</td>
+      <td class="td-desc">SJ - INSULINA HUMALOG LISPRO FR 10 ML</td>
+      <td>D852591F</td>
+      <td class="td-num">260</td>
+      <td class="td-num">219</td>
+      <td class="td-num div-pos">41</td>
+      <td class="td-obs">Reabrir contagem com 219</td>
+    </tr>
+    <tr>
+      <td class="td-pos">71.01.001.005.02</td>
+      <td class="td-sku">169270</td>
+      <td class="td-desc">VACINA DTPA TRIPLICE ACELULAR ADULTO (FRASCO 1 DOSE)</td>
+      <td>240331400</td>
+      <td class="td-num">869</td>
+      <td class="td-num">0</td>
+      <td class="td-num div-pos">869</td>
+      <td class="td-obs">Reabrir e contar 869 UNIDADES recebido durante o inventario  Lote 2403314/00</td>
+    </tr>
+    <tr>
+      <td class="td-pos">71.01.002.001.01</td>
+      <td class="td-sku">158680</td>
+      <td class="td-desc">VACINA COVID-19 - PFIZER ADULTO</td>
+      <td>NC3059</td>
+      <td class="td-num">9000</td>
+      <td class="td-num">9000</td>
+      <td class="td-num ">0</td>
+      <td class="td-obs">REABRIR CONTAR 9000</td>
+    </tr>
+    <tr>
+      <td class="td-pos">71.01.002.003.01</td>
+      <td class="td-sku">16030830</td>
+      <td class="td-desc">VACINA HEPATITE A INFANTIL - 01 DOSE</td>
+      <td>2402407600</td>
+      <td class="td-num">0</td>
+      <td class="td-num">0</td>
+      <td class="td-num ">0</td>
+      <td class="td-obs">digitação de lote sem caractere especial reabrir contagem e inserir a / saldo final sobra de 1920 unidades</td>
+    </tr>
+    <tr>
+      <td class="td-pos">71.01.002.004.01</td>
+      <td class="td-sku">169268</td>
+      <td class="td-desc">VACINA PAPILOMA VÍRUS HUMANO TIPO 6, 11, 16 E 18</td>
+      <td>2403356/00</td>
+      <td class="td-num">1992</td>
+      <td class="td-num">4752</td>
+      <td class="td-num div-neg">-2760</td>
+      <td class="td-obs">Reabrir e contar 4704 Saldo sitemico a considerar 4708</td>
+    </tr>
+    <tr>
+      <td class="td-pos">71.01.002.005.03</td>
+      <td class="td-sku">169262</td>
+      <td class="td-desc">VACINA FEBRE AMARELA</td>
+      <td>255VFA026W</td>
+      <td class="td-num">330</td>
+      <td class="td-num">605</td>
+      <td class="td-num div-neg">-275</td>
+      <td class="td-obs">Reabrir e contar com 290 falta improcedente saldo de acordo com entrada s e saida o saldo incial deve ser 290</td>
+    </tr>
+    <tr>
+      <td class="td-pos">71.01.002.006.01</td>
+      <td class="td-sku">169262</td>
+      <td class="td-desc">VACINA FEBRE AMARELA</td>
+      <td>255VFA027W</td>
+      <td class="td-num">8845</td>
+      <td class="td-num">8795</td>
+      <td class="td-num div-pos">50</td>
+      <td class="td-obs">Reabrir e contar 8795</td>
+    </tr>
+    <tr>
+      <td class="td-pos">71.01.002.012.03</td>
+      <td class="td-sku">169270</td>
+      <td class="td-desc">VACINA DTPA TRIPLICE ACELULAR ADULTO (FRASCO 1 DOSE)</td>
+      <td>2403314/00</td>
+      <td class="td-num">0</td>
+      <td class="td-num">2880</td>
+      <td class="td-num div-neg">-2880</td>
+      <td class="td-obs">Reabrir e contar1920 UNIDADES recebido durante o inventario </td>
+    </tr>
+    <tr>
+      <td class="td-pos">71.02.001.004.05</td>
+      <td class="td-sku">26396</td>
+      <td class="td-desc">IRF - INSULINA REGULAR HUMANA 100UI</td>
+      <td>ER325090262</td>
+      <td class="td-num">25</td>
+      <td class="td-num">0</td>
+      <td class="td-num div-pos">25</td>
+      <td class="td-obs">Reabrir e contar com lote correto</td>
+    </tr>
+    <tr>
+      <td class="td-pos">71.02.001.006.05</td>
+      <td class="td-sku">107590</td>
+      <td class="td-desc">SJ - INSULINA XULTOPHY- CANETA 3ML</td>
+      <td>RZFHT61</td>
+      <td class="td-num">20</td>
+      <td class="td-num">0</td>
+      <td class="td-num div-pos">20</td>
+      <td class="td-obs">Reabrir contagem e contar com 20 unidades</td>
+    </tr>
+    <tr>
+      <td class="td-pos">71.02.001.006.06</td>
+      <td class="td-sku">26396</td>
+      <td class="td-desc">SJ - INSULINA ASPART NOVORAPID FLEX PEN</td>
+      <td>PR719X5</td>
+      <td class="td-num">20</td>
+      <td class="td-num">20</td>
+      <td class="td-num ">0</td>
+      <td class="td-obs">Reabrir e contar no SKU 35782</td>
+    </tr>
+    <tr>
+      <td class="td-pos">71.02.001.007.03</td>
+      <td class="td-sku">71916</td>
+      <td class="td-desc">SJ - INSULINA TOUJEO (GLARGINA) - CANETA DESCARTÁVEL</td>
+      <td>4F149A</td>
+      <td class="td-num">46</td>
+      <td class="td-num">58</td>
+      <td class="td-num div-neg">-12</td>
+      <td class="td-obs">Reabrir contagem com 46 unidades </td>
+    </tr>
+    <tr>
+      <td class="td-pos">71.02.001.008.02</td>
+      <td class="td-sku">26396</td>
+      <td class="td-desc">SJ - INSULINA ASPART NOVORAPID FLEX PEN</td>
+      <td>PR714R2</td>
+      <td class="td-num">495</td>
+      <td class="td-num">0</td>
+      <td class="td-num div-pos">495</td>
+      <td class="td-obs">Reabrir e contar no SKU 34401</td>
+    </tr>
+    <tr>
+      <td class="td-pos">71.02.001.020.02</td>
+      <td class="td-sku">169621</td>
+      <td class="td-desc">DILUENTE PARA VACINA TRÍPLICE VIRAL - 1 DOSE</td>
+      <td>0644S4007</td>
+      <td class="td-num">13100</td>
+      <td class="td-num">11800</td>
+      <td class="td-num div-pos">1300</td>
+      <td class="td-obs">REABRIR CONTAR 11800 LOTE 0644S4007</td>
+    </tr>
+    <tr>
+      <td class="td-pos">71.02.001.020.03</td>
+      <td class="td-sku">169621</td>
+      <td class="td-desc">DILUENTE PARA VACINA TRÍPLICE VIRAL - 1 DOSE</td>
+      <td>064454007</td>
+      <td class="td-num">13600</td>
+      <td class="td-num">0</td>
+      <td class="td-num div-pos">13600</td>
+      <td class="td-obs">REABRIR CONTAR 0</td>
+    </tr>
+    <tr>
+      <td class="td-pos">71.02.001.022.02</td>
+      <td class="td-sku">169618</td>
+      <td class="td-desc">DILUENTE PARA VACINA HIB - 1 DOSE</td>
+      <td>1153S4003</td>
+      <td class="td-num">258</td>
+      <td class="td-num">1200</td>
+      <td class="td-num div-neg">-942</td>
+      <td class="td-obs">Reabrir e contar 90 Falta improcedente saldo sistemico incorreto, saldo inicial correto 90 unidades</td>
+    </tr>
+    <tr>
+      <td class="td-pos">71.02.001.022.03</td>
+      <td class="td-sku">164652</td>
+      <td class="td-desc">VAICINA CRIE - DTPA INFANTIL</td>
+      <td>4cA03c1</td>
+      <td class="td-num">3</td>
+      <td class="td-num">0</td>
+      <td class="td-num ">0</td>
+      <td class="td-obs">Reabrir e contar com o lote com letras maiusculas 7 undiades</td>
+    </tr>
+    <tr>
+      <td class="td-pos">71.02.001.022.03</td>
+      <td class="td-sku">164652</td>
+      <td class="td-desc">VAICINA CRIE - DTPA INFANTIL</td>
+      <td>4CA03C1</td>
+      <td class="td-num">5</td>
+      <td class="td-num">7</td>
+      <td class="td-num ">0</td>
+      <td class="td-obs">Reabrir e contar com o lote com letras maiusculas 7 undiades</td>
+    </tr>
+    <tr>
+      <td class="td-pos">71.02.001.024.04</td>
+      <td class="td-sku">169265</td>
+      <td class="td-desc">VACINA CONTRA POLIOMIELITE 1, 2 E 3 INATIVADA 10 DOSES</td>
+      <td>Y3C171V</td>
+      <td class="td-num">320</td>
+      <td class="td-num">3320</td>
+      <td class="td-num div-neg">-3000</td>
+      <td class="td-obs">Reabrir e contar3320</td>
+    </tr>
+    <tr>
+      <td class="td-pos">71.02.001.024.05</td>
+      <td class="td-sku">169620</td>
+      <td class="td-desc">DILUENTE PARA VACINA TETRAVIRAL - 1 DOSE</td>
+      <td>L19650</td>
+      <td class="td-num">520</td>
+      <td class="td-num">3400</td>
+      <td class="td-num div-neg">-2880</td>
+      <td class="td-obs">Reabrir e contar recebido durante o inventario</td>
+    </tr>
+    <tr>
+      <td class="td-pos">71.02.001.025.02</td>
+      <td class="td-sku">16030830</td>
+      <td class="td-desc">VACINA HEPATITE A INFANTIL - 01 DOSE</td>
+      <td>2404076/00</td>
+      <td class="td-num">1920</td>
+      <td class="td-num">1920</td>
+      <td class="td-num ">0</td>
+      <td class="td-obs">digitação de lote sem caractere especial reabrir contagem e inserir a / saldo final sobra de 1920 unidades</td>
+    </tr>
+    <tr>
+      <td class="td-pos">71.02.002.003.01</td>
+      <td class="td-sku">169251</td>
+      <td class="td-desc">VACINA CRIE - CONTRA HAEMOPHILUS &quot;B&quot; (HIB) - 1 DOSE</td>
+      <td>1143M008</td>
+      <td class="td-num">111</td>
+      <td class="td-num">111</td>
+      <td class="td-num ">0</td>
+      <td class="td-obs">Reabrir contagem com 111 unidades Saldo incial Real 111 unidades, erro de entrada.</td>
+    </tr>
+    <tr>
+      <td class="td-pos">71.02.002.005.04</td>
+      <td class="td-sku">169268</td>
+      <td class="td-desc">VACINA PAPILOMA VÍRUS HUMANO TIPO 6, 11, 16 E 18</td>
+      <td>240335600</td>
+      <td class="td-num">124</td>
+      <td class="td-num">0</td>
+      <td class="td-num div-pos">124</td>
+      <td class="td-obs">Reabrir e contar 0</td>
+    </tr>
+    <tr>
+      <td class="td-pos">71.02.002.006.06</td>
+      <td class="td-sku">169260</td>
+      <td class="td-desc">VACINA ORAL DE ROTAVIRUS HUMANO MONODOSE</td>
+      <td>AROLE401AA</td>
+      <td class="td-num">55</td>
+      <td class="td-num">24</td>
+      <td class="td-num div-pos">31</td>
+      <td class="td-obs">Reabrir e contar 25</td>
+    </tr>
+    <tr>
+      <td class="td-pos">71.02.002.007.06</td>
+      <td class="td-sku">169941</td>
+      <td class="td-desc">NIRSEVIMABE 1,0 ML</td>
+      <td>AZ250156</td>
+      <td class="td-num">51</td>
+      <td class="td-num">50</td>
+      <td class="td-num div-pos">1</td>
+      <td class="td-obs">Reabrir e contar 50 unidades o saldo de sobra seguirá para atendimento de pedido</td>
+    </tr>
+    <tr>
+      <td class="td-pos">71.02.002.008.05</td>
+      <td class="td-sku">169941</td>
+      <td class="td-desc">NIRSEVIMABE 1,0 ML</td>
+      <td>AZ250111</td>
+      <td class="td-num">34</td>
+      <td class="td-num">1</td>
+      <td class="td-num div-pos">33</td>
+      <td class="td-obs">Reabrir e contar 1 unidade o saldo de sobra seguirá para atendimento de pedido</td>
+    </tr>
+    <tr>
+      <td class="td-pos">71.02.002.009.01</td>
+      <td class="td-sku">169248</td>
+      <td class="td-desc">VACINA CONTRA VARICELA GSK - 01 DOSE (COM DILUENTE)</td>
+      <td>A70FD866A</td>
+      <td class="td-num">6</td>
+      <td class="td-num">0</td>
+      <td class="td-num div-pos">6</td>
+      <td class="td-obs">Reabrir e conta r0</td>
+    </tr>
+    <tr>
+      <td class="td-pos">71.02.002.010.04</td>
+      <td class="td-sku">169260</td>
+      <td class="td-desc">VACINA ORAL DE ROTAVIRUS HUMANO MONODOSE</td>
+      <td>Arole402AA</td>
+      <td class="td-num">4</td>
+      <td class="td-num">0</td>
+      <td class="td-num ">0</td>
+      <td class="td-obs">Reabrir e contar lote AROLE423AA</td>
+    </tr>
+    <tr>
+      <td class="td-pos">71.02.002.011.02</td>
+      <td class="td-sku">169248</td>
+      <td class="td-desc">VACINA CONTRA VARICELA GSK - 01 DOSE (COM DILUENTE)</td>
+      <td>A770CD867A</td>
+      <td class="td-num">16</td>
+      <td class="td-num">0</td>
+      <td class="td-num div-pos">16</td>
+      <td class="td-obs">Reabrir e contar no SKU 170150</td>
+    </tr>
+    <tr>
+      <td class="td-pos">71.02.002.012.02</td>
+      <td class="td-sku">169263</td>
+      <td class="td-desc">VACINA MENINGOCÓCICA CONJUGADA GRUPO C - 1 DOSE</td>
+      <td>Amcc09aa</td>
+      <td class="td-num">4</td>
+      <td class="td-num">0</td>
+      <td class="td-num ">0</td>
+      <td class="td-obs">Reabrir e contar 3 unidades lote AMCC09AA</td>
+    </tr>
+    <tr>
+      <td class="td-pos">71.02.002.015.06</td>
+      <td class="td-sku">169940</td>
+      <td class="td-desc">NIRSEVIMABE - 0,5 ML</td>
+      <td>AZ250134</td>
+      <td class="td-num">14</td>
+      <td class="td-num">13</td>
+      <td class="td-num div-pos">1</td>
+      <td class="td-obs">Reabrir e contar 13 unidades o saldo de sobra seguirá para atendimento de pedido</td>
+    </tr>
+    <tr>
+      <td class="td-pos">REABRIR</td>
+      <td class="td-sku">166893</td>
+      <td class="td-desc">INSULINA HUMANA TIPO NPH 100 UI/ML INJ. CARPULE/TUBETE</td>
+      <td>241VP0OO4NB</td>
+      <td class="td-num">2180</td>
+      <td class="td-num">0</td>
+      <td class="td-num div-pos">2180</td>
+      <td class="td-obs">Lote pertencente a vacina reabrir e contar no SKU 169264, 2308 unidades</td>
+    </tr>
+    <tr>
+      <td class="td-pos">REABRIR</td>
+      <td class="td-sku">155278</td>
+      <td class="td-desc">VACINA TRÍPLICE VIRAL (SCR) - SERUM</td>
+      <td>0134N048A</td>
+      <td class="td-num">16100</td>
+      <td class="td-num">1278</td>
+      <td class="td-num div-pos">14822</td>
+      <td class="td-obs">REABRIR CONTAGEM 15000 LOTE 0134N081A</td>
+    </tr>
+    <tr>
+      <td class="td-pos">REABRIR</td>
+      <td class="td-sku">166892</td>
+      <td class="td-desc">INSULINA HUMANA REGULAR 100 UI/ML INJETÁVEL - CARPULE/TUBETE</td>
+      <td>C202506B24</td>
+      <td class="td-num">720</td>
+      <td class="td-num">0</td>
+      <td class="td-num div-pos">720</td>
+      <td class="td-obs">Reabrir contagem com e concluir com o lote C202506B024 720 unidades</td>
+    </tr>
+    <tr>
+      <td class="td-pos">REABRIR</td>
+      <td class="td-sku">34831</td>
+      <td class="td-desc">SJ - INSULINA HUMALOG LISPRO REFIL C/ 3 ML</td>
+      <td>D741795DF</td>
+      <td class="td-num">0</td>
+      <td class="td-num">683</td>
+      <td class="td-num ">0</td>
+      <td class="td-obs">Reabrir contagem com 683</td>
+    </tr>
+    <tr>
+      <td class="td-pos">REABRIR</td>
+      <td class="td-sku">169277</td>
+      <td class="td-desc">PPD TUBERCULINA TESTE MANTOUX</td>
+      <td>NC3073</td>
+      <td class="td-num">20</td>
+      <td class="td-num">0</td>
+      <td class="td-num div-pos">20</td>
+      <td class="td-obs">Reabrir contagem no lote P2566-01</td>
+    </tr>
+    <tr>
+      <td class="td-pos">REABRIR</td>
+      <td class="td-sku">169263</td>
+      <td class="td-desc">VACINA MENINGOCÓCICA CONJUGADA GRUPO C - 1 DOSE</td>
+      <td>AMCC14AA</td>
+      <td class="td-num">1120</td>
+      <td class="td-num">1120</td>
+      <td class="td-num ">0</td>
+      <td class="td-obs">Reabrir e contar 1120 Recebimento não armazenado</td>
+    </tr>
+    <tr>
+      <td class="td-pos">REABRIR</td>
+      <td class="td-sku">169263</td>
+      <td class="td-desc">VACINA MENINGOCÓCICA CONJUGADA GRUPO C - 1 DOSE</td>
+      <td>25080047</td>
+      <td class="td-num">1760</td>
+      <td class="td-num">1760</td>
+      <td class="td-num ">0</td>
+      <td class="td-obs">reabrir e contar 1760</td>
+    </tr>
+    <tr>
+      <td class="td-pos">REABRIR</td>
+      <td class="td-sku">169248</td>
+      <td class="td-desc">VACINA CONTRA VARICELA GSK - 01 DOSE (COM DILUENTE)</td>
+      <td>Z50125007</td>
+      <td class="td-num">18</td>
+      <td class="td-num">16</td>
+      <td class="td-num div-pos">2</td>
+      <td class="td-obs">Reabrir e contar 18 saldo incial incorreto saldo esperado 16, sobra de 2 unidades</td>
+    </tr>
+    <tr>
+      <td class="td-pos">REABRIR</td>
+      <td class="td-sku">169265</td>
+      <td class="td-desc">VACINA CONTRA POLIOMIELITE 1, 2 E 3 INATIVADA 10 DOSES</td>
+      <td>X3H861V</td>
+      <td class="td-num">5680</td>
+      <td class="td-num">2680</td>
+      <td class="td-num div-pos">3000</td>
+      <td class="td-obs">Reabrir e contar 2680</td>
+    </tr>
+    <tr>
+      <td class="td-pos">REABRIR</td>
+      <td class="td-sku">169799</td>
+      <td class="td-desc">VACINA DENGUE 1, 2, 3 E 4 - ATENUADA - BTT</td>
+      <td>260037100</td>
+      <td class="td-num">0</td>
+      <td class="td-num">409</td>
+      <td class="td-num div-neg">-409</td>
+      <td class="td-obs">Reabrir e contar 409 unidades</td>
+    </tr>
+    <tr>
+      <td class="td-pos">REABRIR</td>
+      <td class="td-sku">169614</td>
+      <td class="td-desc">DILUENTE PARA VACINA BCG - 20 DOSES</td>
+      <td>0703S1019</td>
+      <td class="td-num">9800</td>
+      <td class="td-num">8320</td>
+      <td class="td-num div-pos">1480</td>
+      <td class="td-obs">Reabrir e recontar com 9120</td>
+    </tr>
+    <tr>
+      <td class="td-pos">REABRIR</td>
+      <td class="td-sku">169616</td>
+      <td class="td-desc">DILUENTE PARA VACINA FEBRE AMARELA - 5 DOSES</td>
+      <td>2530305</td>
+      <td class="td-num">4980</td>
+      <td class="td-num">5980</td>
+      <td class="td-num div-neg">-1000</td>
+      <td class="td-obs">Reabrir e contar 5980</td>
+    </tr>
+    <tr>
+      <td class="td-pos">REABRIR</td>
+      <td class="td-sku">169261</td>
+      <td class="td-desc">VACINA MENINGOCOCICA ACWY CONJUGADA INJETAVEL 01 DOSE</td>
+      <td>247VML022NB</td>
+      <td class="td-num">0</td>
+      <td class="td-num">931</td>
+      <td class="td-num div-neg">-931</td>
+      <td class="td-obs">Reabrir e contar 931</td>
+    </tr>
+    <tr>
+      <td class="td-pos">REABRIR</td>
+      <td class="td-sku">26396</td>
+      <td class="td-desc">IRF - INSULINA REGULAR HUMANA 100UI</td>
+      <td>ER3250900262</td>
+      <td class="td-num">0</td>
+      <td class="td-num">25</td>
+      <td class="td-num div-neg">-25</td>
+      <td class="td-obs">Reabrir e contar com lote correto</td>
+    </tr>
+    <tr>
+      <td class="td-pos">REABRIR</td>
+      <td class="td-sku">169248</td>
+      <td class="td-desc">VACINA CONTRA VARICELA GSK - 01 DOSE (COM DILUENTE)</td>
+      <td>Z007591</td>
+      <td class="td-num">1000</td>
+      <td class="td-num">0</td>
+      <td class="td-num div-pos">1000</td>
+      <td class="td-obs">reabrir e contar no lote Z0007591, 1000 unidades compensação pela digitação do lote incorreto</td>
+    </tr>
+    <tr>
+      <td class="td-pos">REABRIR</td>
+      <td class="td-sku">24226</td>
+      <td class="td-desc">IRF - INSULINA NPH HUMANA 100 UI SOL INJ</td>
+      <td>S25S003</td>
+      <td class="td-num">3880</td>
+      <td class="td-num">3700</td>
+      <td class="td-num div-pos">180</td>
+      <td class="td-obs">reabrir e contar no SKU 24226 com 3700 unidades</td>
+    </tr>
+    <tr>
+      <td class="td-pos">REABRIR</td>
+      <td class="td-sku">24226</td>
+      <td class="td-desc">IRF - INSULINA NPH HUMANA 100 UI SOL INJ</td>
+      <td>S25G014</td>
+      <td class="td-num">140</td>
+      <td class="td-num">40</td>
+      <td class="td-num div-pos">100</td>
+      <td class="td-obs">reabrir e contar no SKU 24226 com 40 unidades</td>
+    </tr>
+    <tr>
+      <td class="td-pos">REABRIR</td>
+      <td class="td-sku">24226</td>
+      <td class="td-desc">IRF - INSULINA NPH HUMANA 100 UI SOL INJ</td>
+      <td>S25S001</td>
+      <td class="td-num">30</td>
+      <td class="td-num">0</td>
+      <td class="td-num div-pos">30</td>
+      <td class="td-obs">reabrir e contar no SKU 24226 com 30 unidades</td>
+    </tr>
+    <tr>
+      <td class="td-pos">REABRIR</td>
+      <td class="td-sku">24226</td>
+      <td class="td-desc">IRF - INSULINA NPH HUMANA 100 UI SOL INJ</td>
+      <td>EN325060662</td>
+      <td class="td-num">20</td>
+      <td class="td-num">0</td>
+      <td class="td-num div-pos">20</td>
+      <td class="td-obs">reabrir e contar no SKU 24226 com 20 unidades</td>
+    </tr>
+    <tr>
+      <td class="td-pos">REABRIR</td>
+      <td class="td-sku">24226</td>
+      <td class="td-desc">IRF - INSULINA NPH HUMANA 100 UI SOL INJ</td>
+      <td>S25G030</td>
+      <td class="td-num">20</td>
+      <td class="td-num">0</td>
+      <td class="td-num div-pos">20</td>
+      <td class="td-obs">Reabrir e recontar no SKU 999254</td>
+    </tr>
+    <tr>
+      <td class="td-pos">REABRIR</td>
+      <td class="td-sku">24226</td>
+      <td class="td-desc">IRF - INSULINA NPH HUMANA 100 UI SOL INJ</td>
+      <td>RT6KA99</td>
+      <td class="td-num">2</td>
+      <td class="td-num">0</td>
+      <td class="td-num div-pos">2</td>
+      <td class="td-obs">reabrir e contar no SKU 24226 com 2 unidades</td>
+    </tr>
+    <tr>
+      <td class="td-pos">REABRIR</td>
+      <td class="td-sku">169248</td>
+      <td class="td-desc">VACINA CONTRA VARICELA GSK - 01 DOSE (COM DILUENTE)</td>
+      <td>A70CD866A</td>
+      <td class="td-num">6</td>
+      <td class="td-num">6</td>
+      <td class="td-num ">0</td>
+      <td class="td-obs">Reabrir e contar no SKU 170150</td>
+    </tr>
+    <tr>
+      <td class="td-pos">REABRIR</td>
+      <td class="td-sku">26396</td>
+      <td class="td-desc">IRF - INSULINA REGULAR HUMANA 100UI</td>
+      <td>ER325050112</td>
+      <td class="td-num">3769</td>
+      <td class="td-num">29</td>
+      <td class="td-num div-pos">3740</td>
+      <td class="td-obs">Reabrir e contar com 110</td>
+    </tr>
+    <tr>
+      <td class="td-pos">REABRIR</td>
+      <td class="td-sku">26396</td>
+      <td class="td-desc">IRF - INSULINA REGULAR HUMANA 100UI</td>
+      <td>ER325070182</td>
+      <td class="td-num">3635</td>
+      <td class="td-num">2545</td>
+      <td class="td-num div-pos">1090</td>
+      <td class="td-obs">reabrir e contar com 3940</td>
+    </tr>
+    <tr>
+      <td class="td-pos">REABRIR</td>
+      <td class="td-sku">26396</td>
+      <td class="td-desc">IRF - INSULINA REGULAR HUMANA 100UI</td>
+      <td>ER325070182</td>
+      <td class="td-num">1020</td>
+      <td class="td-num">0</td>
+      <td class="td-num div-pos">1020</td>
+      <td class="td-obs">reabrir e contar com 0</td>
+    </tr>
+    <tr>
+      <td class="td-pos">REABRIR</td>
+      <td class="td-sku">26396</td>
+      <td class="td-desc">SJ - INSULINA ASPART NOVORAPID FLEX PEN</td>
+      <td>RT6KH17</td>
+      <td class="td-num">100</td>
+      <td class="td-num">50</td>
+      <td class="td-num div-pos">50</td>
+      <td class="td-obs">Reabrir e contar 50 UNIDADES SKU 26396</td>
+    </tr>
+    <tr>
+      <td class="td-pos">REABRIR</td>
+      <td class="td-sku">26396</td>
+      <td class="td-desc">SJ - INSULINA ASPART NOVORAPID FLEX PEN</td>
+      <td>PR719X6</td>
+      <td class="td-num">10</td>
+      <td class="td-num">8</td>
+      <td class="td-num div-pos">2</td>
+      <td class="td-obs">Reabrir e contar no SKU 35782 COM 10 UNIDADES</td>
+    </tr>
+    <tr>
+      <td class="td-pos">REABRIR</td>
+      <td class="td-sku">169621</td>
+      <td class="td-desc">DILUENTE PARA VACINA TRÍPLICE VIRAL - 1 DOSE</td>
+      <td>0644S4005</td>
+      <td class="td-num">0</td>
+      <td class="td-num">3200</td>
+      <td class="td-num div-neg">-3200</td>
+      <td class="td-obs">Reabrir e contar recebido durante o inventario</td>
+    </tr>
+    <tr>
+      <td class="td-pos">REABRIR</td>
+      <td class="td-sku">26396</td>
+      <td class="td-desc">SJ - INSULINA ASPART NOVORAPID FLEX PEN</td>
+      <td>PR71FH2</td>
+      <td class="td-num">0</td>
+      <td class="td-num">40</td>
+      <td class="td-num div-neg">-40</td>
+      <td class="td-obs">Reabrir e contar no SKU 999254 COM 40 UNIDADES</td>
+    </tr>
+    <tr>
+      <td class="td-pos">REABRIR</td>
+      <td class="td-sku">24226</td>
+      <td class="td-desc">IRF - INSULINA NPH HUMANA 100 UI SOL INJ</td>
+      <td>DAA10497</td>
+      <td class="td-num">0</td>
+      <td class="td-num">3600</td>
+      <td class="td-num div-neg">-3600</td>
+      <td class="td-obs">Reabrir e contar recebido durante o inventario</td>
+    </tr>
+    <tr>
+      <td class="td-pos">REABRIR</td>
+      <td class="td-sku">51668</td>
+      <td class="td-desc">SJ - SOMATROPINA 12 UI RECOMBINANTE HUMANA 12 UI/2 ML</td>
+      <td>CC41016</td>
+      <td class="td-num">352</td>
+      <td class="td-num">350</td>
+      <td class="td-num ">0</td>
+      <td class="td-obs">Sobra improcedente reabrir contagem com 350</td>
+    </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+function filterTable() {
+  var q = document.getElementById('filter-input').value.toLowerCase();
+  var rows = document.querySelectorAll('#items-tbody tr');
+  var visible = 0;
+  rows.forEach(function(r) {
+    var txt = r.textContent.toLowerCase();
+    var show = !q || txt.includes(q);
+    r.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+  document.getElementById('result-count').textContent = visible + ' itens';
+}
+</script>
+</body>
+</html>
